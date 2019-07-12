@@ -1,0 +1,36 @@
+version: '3.2'
+
+services:
+  db:
+    image: mdillon/postgis
+    env_file: scooters/docker.env
+    volumes:
+      - type: volume
+        source: db
+        target: /var/lib/postgresql/data
+    ports:
+      - "127.0.0.3:5432:5432"
+  redis:
+    image: redis
+    tmpfs: /data
+    sysctls:
+      net.core.somaxconn: 512
+    ports:
+      - "127.0.0.3:6379:6379"
+  app:
+    env_file: scooters/docker.env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: wait-for-it db:5432 -- /usr/src/app/startup.sh
+    volumes:
+      - type: bind
+        source: .
+        target: /usr/src/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+volumes:
+  db:

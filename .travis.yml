@@ -1,0 +1,42 @@
+sudo: required
+
+services:
+  - docker
+
+language: python
+python:
+  - 3.6
+
+#notifications:
+#  slack: serioeses:<put apikey here>
+
+git:
+  submodules: false
+
+matrix:
+  include:
+    - env: COMPOSE_YML=docker-compose.yml
+
+before_install:
+  - cp scooters/production/docker.env.example scooters/docker.env
+  - cp scooters/production/local_settings.py.example scooters/local_settings.py
+
+install:
+  - true
+  # We're skipping the install step as we're running pip etc. in the Docker build
+
+script:
+  - docker-compose -f $COMPOSE_YML pull
+  - docker-compose -f $COMPOSE_YML build
+  # TODO Could push the image, and test the built image in the next stage
+  - docker-compose -f $COMPOSE_YML up -d
+
+  # Wait for the app to be ready by waiting for the db to be ready
+  - docker-compose -f $COMPOSE_YML exec app wait-for-it db:5432 -- /bin/true
+
+  # Useful for debugging:
+  - sleep 3
+  - docker ps -a
+  - docker-compose -f $COMPOSE_YML logs app
+
+  - docker-compose -f $COMPOSE_YML exec app python3 manage.py test

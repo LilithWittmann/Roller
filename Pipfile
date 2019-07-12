@@ -1,0 +1,40 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+django-debug-toolbar = "~=1.9.1"
+ipython = "~=6.5.0"
+
+[packages]
+Django = "~=2.1.2"
+Sphinx = "~=1.7.9"
+psycopg2 = "~=2.7.5"
+coverage = "~=4.5.1"
+django-extensions = "~=2.1.3"
+django-graphene-gis-extension = "~=0.2"
+django-filter = "~=2.0.0"
+django-redis = "~=4.9.0"
+graphene-django = "~=2.1.0"
+serious-django-enums = "~=0.1"
+serious-django-graphene = "~=0.1.post2"
+serious-django-permissions = "~=0.5"
+serious-django-services = "~=0.2.post2"
+# If you need finite-state-machine fields on your models:
+# django-fsm = "~=2.6.0"
+# Comment out the following for social-auth and OTP authentication via SMS,
+# and for push notifications:
+# phonenumbers = "~=8.9.12"
+# django-phonenumber-field = "~=2.0.1"
+# django-push-notifications = "~=1.6.0"
+# social-auth-app-django = "~=2.1.0"
+# [TODO] serious-django-sms-auth
+python-dateutil = "*"
+shapely = "~=1.7a2"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

@@ -1,0 +1,38 @@
+from os import environ
+
+# PostGIS db
+# - You have to set this up locally yourself (TODO)
+# - When setting up, make sure to create the postgis extension for the DB
+# - Remove to use SQLite/SpatiaLite
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'HOST': 'db',
+        'NAME': 'scooters',
+        'USER': environ.get('POSTGRES_USER') or 'scooters',
+        'PASSWORD': environ.get('POSTGRES_PASSWORD') or 's3cr3t',
+    },
+}
+
+# Redis db
+# - You have to set this up locally yourself (TODO)
+# - Remove to use the default Django Channels backend (not recommended)
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+# Caching via Redis
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
