@@ -7,6 +7,10 @@ from vehicles.crawlers.crawler import Crawler, VehicleTrack
 class TierCrawler(Crawler):
     required_settings = ["API_KEY"]
 
+
+    SERVICE_PROVIDER = "tier"
+    LOCATION_BASED_CRAWLING = True
+
     def nearby_search(self, lat: float, lon: float, radius: int = 500) -> [VehicleTrack]:
         request_url = f'https://platform.tier-services.io/vehicle?lat={lat}&lng={lon}&radius={radius}'
         headers = {'X-Api-Key': self.settings.get("API_KEY")}

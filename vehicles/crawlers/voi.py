@@ -8,6 +8,10 @@ from vehicles.crawlers.crawler import Crawler, VehicleTrack
 class VoiCrawler(Crawler):
     required_settings = []
 
+
+    SERVICE_PROVIDER = "voi"
+    LOCATION_BASED_CRAWLING = True
+
     def nearby_search(self, lat: float, lon: float, radius: int = None) -> [VehicleTrack]:
         request_url = f'https://api.voiapp.io/v1/vehicle/status/ready?lat={lat}&lng={lon}'
 

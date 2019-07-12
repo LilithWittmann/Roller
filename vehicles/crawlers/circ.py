@@ -10,6 +10,9 @@ from vehicles.crawlers.crawler import Crawler, VehicleTrack
 class CircCrawler(Crawler):
     required_settings = []
 
+    SERVICE_PROVIDER = "circ"
+    LOCATION_BASED_CRAWLING = True
+
     def nearby_search(self, lat: float, lon: float, radius: int = 500) -> [VehicleTrack]:
 
         # i know its not exact but the best i wanted to build right now ^^

@@ -57,6 +57,8 @@ INSTALLED_APPS = [
 
     ## Your helpers app
     'helpers',
+    'django_admin_json_editor',  # for the crawler settings
+    'leaflet',
 
     ## Your own apps
     'vehicles',
@@ -173,6 +175,17 @@ SHELL_PLUS_PRE_IMPORTS = [
 # Setting to have debug-toolbar show up on local development
 INTERNAL_IPS = ['127.0.0.1', '127.0.0.3']
 
+
+INSTALLED_CRAWLERS = {
+    "circ": 'vehicles.crawlers.circ.CircCrawler',
+    "emmy": 'vehicles.crawlers.emmy.EmmyCrawler',
+    "hive": 'vehicles.crawlers.hive.HiveCrawler',
+    "lime": 'vehicles.crawlers.lime.LimeCrawler',
+    "tier": 'vehicles.crawlers.tier.TierCrawler',
+    "ufo": 'vehicles.crawlers.ufo.UfoCrawler',
+    "voi": 'vehicles.crawlers.voi.VoiCrawler',
+    "zero": 'vehicles.crawlers.tier.ZeroCrawler',
+}
 
 # Use the file local_settings.py to overwrite the defaults with your own
 # settings

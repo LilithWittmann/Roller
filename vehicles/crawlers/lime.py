@@ -10,6 +10,9 @@ from vehicles.crawlers.crawler import Crawler, VehicleTrack
 class LimeCrawler(Crawler):
     required_settings = ["WEB_SESSION", "AUTHORIZATION"]
 
+    SERVICE_PROVIDER = "lime"
+    LOCATION_BASED_CRAWLING = True
+
     def nearby_search(self, lat: float, lon: float, radius: int = 500) -> [VehicleTrack]:
 
         # i know its not exact but the best i wanted to build right now ^^
@@ -40,12 +43,17 @@ class LimeCrawler(Crawler):
                                 params=params, cookies=cookies)
 
         vehicle_tracks = []
+        if not "data" in response.json():
+            return []
         for item in response.json()["data"]["attributes"]["bikes"]:
             vehicle_tracks.append(VehicleTrack(vehicle_id=f'{item["attributes"]["type_name"]}-{item["attributes"]["last_three"]}',
                                                provider="lime",
                                                last_seen=dateutil_parser(item["attributes"]["last_activity_at"]),
                                                lat=item["attributes"]["latitude"],
                                                lon=item["attributes"]["longitude"],
+                                               battery_level=int(item["attributes"]["meter_range"]/ (40233/ 100)),
                                                raw_data=json.dumps(item)))
+
+
 
         return vehicle_tracks

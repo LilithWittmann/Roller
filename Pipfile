@@ -34,6 +34,8 @@ python-dateutil = "*"
 shapely = "~=1.6b2"
 shapely-geojson = "*"
 geomet = "*"
+django-admin-json-editor = "*"
+django-leaflet = "*"
 geojson = "*"
 
 [requires]

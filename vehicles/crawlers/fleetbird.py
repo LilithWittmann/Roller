@@ -8,6 +8,9 @@ from vehicles.crawlers.crawler import Crawler, VehicleTrack
 class FleetbirdCrawler(Crawler):
     required_settings = ["INSTANCE_NAME", "PROVIDER_NAME"]
 
+
+    LOCATION_BASED_CRAWLING = False
+
     def __init__(self, settings):
         super().__init__(settings)
 

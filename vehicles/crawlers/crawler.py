@@ -2,17 +2,27 @@ import datetime
 from abc import abstractmethod, ABC
 
 import requests
+from django.contrib.gis.geos import Point
 
 
 class VehicleTrack(object):
 
-    def __init__(self, vehicle_id: str, lat: int, lon: int, raw_data: str, provider: str, last_seen: datetime = None):
+    SERVICE_PROVIDER = None
+    LOCATION_BASED_CRAWLING = True
+
+    def __init__(self, vehicle_id: str, lat: int, lon: int, raw_data: str, provider: str, last_seen: datetime = None,
+                 battery_level: int = None):
         self.id = vehicle_id
         self.lat = lat
         self.lon = lon
         self.provider = provider
         self.raw_data = raw_data
         self.last_seen = last_seen
+        self.battery_level = battery_level
+
+    @property
+    def location(self):
+        return Point(self.lon, self.lat)
 
     @property
     def vehicle_id(self) -> str:
@@ -20,6 +30,7 @@ class VehicleTrack(object):
 
     def __str__(self):
         return self.vehicle_id
+
 
 class Crawler(ABC):
     required_settings = []
