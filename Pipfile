@@ -31,7 +31,10 @@ serious-django-services = "~=0.2.post2"
 # social-auth-app-django = "~=2.1.0"
 # [TODO] serious-django-sms-auth
 python-dateutil = "*"
-shapely = "~=1.7a2"
+shapely = "~=1.6b2"
+shapely-geojson = "*"
+geomet = "*"
+geojson = "*"
 
 [requires]
 python_version = "3.7"

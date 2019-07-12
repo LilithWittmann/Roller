@@ -1,3 +1,5 @@
+import math
+
 from django.test import TestCase
 from django.conf import settings
 
@@ -82,3 +84,82 @@ class TestUfo(TestCase):
         vehicles = crawler.nearby_search(53.546723, 9.995547)
         self.assertLess(1, len(vehicles))
         print(len(vehicles))
+
+
+
+
+class TestCalculation(TestCase):
+    def test_crawling(self):
+        from shapely.geometry import shape, Point
+        import geojson
+        import json
+
+        shp = shape({
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              9.909324645996112,
+              53.53969532109345
+            ],
+            [
+              10.078926086425799,
+              53.535002487312106
+            ],
+            [
+              10.076522827148438,
+              53.60432183675507
+            ],
+            [
+              9.96425628662111,
+              53.608803292930865
+            ],
+            [
+              9.906921386718766,
+              53.60941436374625
+            ],
+            [
+              9.909324645996112,
+              53.53969532109345
+            ]
+          ]
+        ]
+      })
+
+        top_left_x = shp.convex_hull.bounds[0]
+        top_left_y = shp.convex_hull.bounds[1]
+        radius = 900
+
+        buffer = (radius / 40000000. * 360. / math.cos(top_left_y / 360. * math.pi))
+
+        top_left_y += buffer
+        top_left_x += buffer
+
+
+        curr_x = top_left_x
+        curr_y = top_left_y
+        points = []
+
+        while Point(curr_x, curr_y).within(shp):
+
+            while Point(curr_x, curr_y).within(shp):
+                print(Point(curr_x, curr_y))
+                points.append(Point(curr_x, curr_y))
+                curr_y += (buffer*2)
+
+            curr_y = top_left_y
+            curr_x += buffer
+
+        geojson = []
+        print(len(points))
+        vehicles = {}
+        for p in points:
+            crawler = TierCrawler({"API_KEY": "bpEUTJEBTf74oGRWxaIcW7aeZMzDDODe1yBoSxi2"})
+            crwl_result = crawler.nearby_search(p.y,p.x, radius=500)
+
+            for v in crwl_result:
+                vehicles[v.vehicle_id] = v
+            print(len(vehicles))
+
+        print(json.dumps(geojson))
+
