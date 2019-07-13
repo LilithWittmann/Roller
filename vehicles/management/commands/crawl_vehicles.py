@@ -39,8 +39,8 @@ def save_to_db(vehicles, service_provider):
         try:
             VehicleLocationTrack.objects.create(vehicle=db_v, position=vehicle.location, raw_data=vehicle.raw_data,
                                             battery_level=vehicle.battery_level, last_seen=vehicle.last_seen)
-        except Exception:
-            pass
+        except Exception as e:
+            print(e)
 
 class Command(BaseCommand):
 

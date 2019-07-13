@@ -1,7 +1,10 @@
+import json
+from datetime import datetime, timedelta
+
 import requests
 from django.conf import settings
 from serious_django_services import Service
-from vehicles.models import ServiceTrackingArea, Pricing, VehicleLocationTrack
+from vehicles.models import ServiceTrackingArea, Pricing, VehicleLocationTrack, Vehicle
 
 
 class PriceEstimationService(Service):
@@ -42,3 +45,35 @@ class RouteEstimationService(Service):
         }
         response = requests.get("https://graphhopper.com/api/1/route", params=routing_request)
         return response.json()
+
+
+class VehicleService(Service):
+
+    service_exceptions = ()
+
+    @classmethod
+    def get_latest_geojson(cls):
+        geojson_list = []
+
+        color_mapping = { "voi": "#f46c62", "lime": "#24d000", "tier": "#69d2aa"}
+
+
+        for itm in VehicleLocationTrack.objects\
+                .filter(updated_at__gte=datetime.now()-timedelta(hours=2)).distinct('vehicle'):
+
+                geojson_list.append({
+                    "type": "Feature",
+                    "properties": {
+                        "color": color_mapping[itm.vehicle_id.split("-")[0]] if itm.vehicle_id.split("-")[0] in color_mapping else "#000"
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [itm.position.x, itm.position.y]
+                    }
+                })
+
+        return [{"geojson": json.dumps({
+            "type": "FeatureCollection",
+            "features": geojson_list
+        })}]
+

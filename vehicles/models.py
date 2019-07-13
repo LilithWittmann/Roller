@@ -42,7 +42,11 @@ class Pricing(models.Model):
 
 class Vehicle(models.Model):
     service_provider = models.ForeignKey(ServiceProvider, related_name="vehicles", on_delete=models.CASCADE)
-    vehicle_id = models.CharField(max_length=200)
+    vehicle_id = models.CharField(max_length=200, primary_key=True, editable=False)
+
+    @property
+    def last_track(self):
+        return self.location_track.order_by('-updated_at').first()
 
     class Meta:
         constraints = [
@@ -62,12 +66,21 @@ class VehicleLocationTrack(gis_models.Model):
     updated_at_day = models.DateField(null=True, auto_now=True)
     raw_data = models.TextField()
 
+    @property
+    def position_geojson(self):
+        return self.position.geojson
+
 
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['vehicle', 'last_seen'], name="unique-user-short-ref"),
             models.UniqueConstraint(fields=['vehicle', 'position', 'battery_level', 'updated_at_day'], name="unique-vehicle-position-battery"),
         ]
+        indexes = [
+            models.Index(fields=['vehicle']),
+            models.Index(fields=['vehicle', 'updated_at'])
+        ]
+
 
     def __str__(self):
         return self.vehicle.vehicle_id
