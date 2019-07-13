@@ -36,14 +36,15 @@ def save_to_db(vehicles, service_provider):
     for vehicle in vehicles:
         db_v, created = Vehicle.objects.get_or_create(service_provider=service_provider,
                                              vehicle_id=vehicle.vehicle_id)
-        VehicleLocationTrack.objects.create(vehicle=db_v, position=vehicle.location, raw_data=vehicle.raw_data,
+        try:
+            VehicleLocationTrack.objects.create(vehicle=db_v, position=vehicle.location, raw_data=vehicle.raw_data,
                                             battery_level=vehicle.battery_level, last_seen=vehicle.last_seen)
+        except Exception:
+            pass
 
 class Command(BaseCommand):
-    """
-    A command to import all the templates that should be editable by an instance admin
-    """
-    help = 'import all the templates that should be editable by an instance admin'
+
+    help = 'executes the configured crawlers'
 
     def handle(self, *args, **options):
 
@@ -53,7 +54,8 @@ class Command(BaseCommand):
                 crawler = crawler_cls(service.settings)
                 print(crawler)
                 if not crawler.LOCATION_BASED_CRAWLING:
-                    vehicles = crawler.nearby_search(None, None)
+                    ctr = Polygon(wkt.loads(str(service_area.area).split(";")[1])).centroid
+                    vehicles = crawler.nearby_search(ctr.y, ctr.x)
                     f_vehicles = filter_location_vehicles(
                         vehicles, Polygon(wkt.loads(str(service_area.area).split(";")[1])))
                     save_to_db(f_vehicles, service)

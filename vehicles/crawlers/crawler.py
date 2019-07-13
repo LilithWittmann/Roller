@@ -22,7 +22,7 @@ class VehicleTrack(object):
 
     @property
     def location(self):
-        return Point(self.lon, self.lat)
+        return Point(round(self.lon, 5), round(self.lat, 5))
 
     @property
     def vehicle_id(self) -> str:

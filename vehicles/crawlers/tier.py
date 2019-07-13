@@ -23,6 +23,7 @@ class TierCrawler(Crawler):
                                                last_seen=dateutil_parser(item["lastStateChange"]),
                                                lat=item["lat"],
                                                lon=item["lng"],
+                                               battery_level=item["batteryLevel"],
                                                raw_data=json.dumps(item)))
 
         return vehicle_tracks

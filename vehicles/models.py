@@ -29,9 +29,25 @@ class ServiceTrackingArea(gis_models.Model):
         return self.name
 
 
+class Pricing(models.Model):
+    service_area = models.ForeignKey(ServiceTrackingArea, on_delete=models.CASCADE)
+    service_provider = models.ForeignKey(ServiceProvider, on_delete=models.CASCADE)
+
+    unlock_fee = models.DecimalField(decimal_places=3, max_digits=5)
+    minute_price = models.DecimalField(decimal_places=3, max_digits=5)
+
+    def __str__(self):
+        return f'{self.service_provider} {self.service_area}'
+
+
 class Vehicle(models.Model):
     service_provider = models.ForeignKey(ServiceProvider, related_name="vehicles", on_delete=models.CASCADE)
     vehicle_id = models.CharField(max_length=200)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['vehicle_id'], name="unique-vehicle-id"),
+        ]
 
     def __str__(self):
         return self.vehicle_id
@@ -43,14 +59,39 @@ class VehicleLocationTrack(gis_models.Model):
     battery_level = models.IntegerField(null=True)
     last_seen = models.DateTimeField(null=True)
     updated_at = models.DateTimeField(null=True, auto_now=True)
+    updated_at_day = models.DateField(null=True, auto_now=True)
     raw_data = models.TextField()
+
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['vehicle', 'last_seen'], name="unique-user-short-ref"),
+            models.UniqueConstraint(fields=['vehicle', 'position', 'battery_level', 'updated_at_day'], name="unique-vehicle-position-battery"),
+        ]
 
     def __str__(self):
         return self.vehicle.vehicle_id
 
 
-class TripEstimation(models.Model):
+class TripEstimation(gis_models.Model):
     start_point = models.ForeignKey(VehicleLocationTrack, related_name="route_start", on_delete=models.CASCADE)
     end_point = models.ForeignKey(VehicleLocationTrack, related_name="route_end", on_delete=models.CASCADE)
     vehicle = models.ForeignKey(Vehicle, related_name="trips", on_delete=models.CASCADE)
+    price_estimation = models.DecimalField(decimal_places=3, max_digits=7, null=True)
+    route_estimation = gis_models.LineStringField(null=True)
     duration = models.DurationField()
+
+    @property
+    def start_position(self):
+        return self.start_point.position
+
+    @property
+    def end_position(self):
+        return self.end_point.position
+
+    @property
+    def battery_consumption(self):
+        return self.start_point.battery_level - self.end_point.battery_level
+
+    def __str__(self):
+        return f'{self.vehicle} ({self.duration} minutes)'

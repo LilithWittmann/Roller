@@ -5,7 +5,7 @@ from django.forms import ModelForm
 from django_admin_json_editor import JSONEditorWidget
 from leaflet.admin import LeafletGeoAdmin
 
-from vehicles.models import ServiceTrackingArea, ServiceProvider, Vehicle, VehicleLocationTrack
+from vehicles.models import ServiceTrackingArea, ServiceProvider, Vehicle, VehicleLocationTrack, TripEstimation, Pricing
 
 
 class ServiceTrackingAreaAdmin(LeafletGeoAdmin):
@@ -13,6 +13,16 @@ class ServiceTrackingAreaAdmin(LeafletGeoAdmin):
 
 
 admin.site.register(ServiceTrackingArea, ServiceTrackingAreaAdmin)
+
+
+class TripEstimationAdmin(LeafletGeoAdmin):
+    fields = ('duration', 'vehicle', 'start_position', 'end_position', 'battery_consumption', 'price_estimation',
+              'route_estimation')
+    readonly_fields = ('duration', 'vehicle', 'start_position', 'end_position', 'battery_consumption',
+                       'price_estimation')
+
+
+admin.site.register(TripEstimation, TripEstimationAdmin)
 
 
 class VehicleLocationTrackAdmin(LeafletGeoAdmin):
@@ -38,3 +48,4 @@ class ServiceProviderAdmin(admin.ModelAdmin):
 
 admin.site.register(ServiceProvider, ServiceProviderAdmin)
 admin.site.register(Vehicle)
+admin.site.register(Pricing)
