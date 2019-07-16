@@ -11,7 +11,8 @@ from shapely.geometry import shape, Point
 import geojson
 import json
 
-from vehicles.models import ServiceTrackingArea, Vehicle, VehicleLocationTrack
+from vehicles.models import ServiceTrackingArea, Vehicle, VehicleLocationTrack, SubUrb
+from vehicles.services import PublicTransportService
 
 
 def import_crawler(name):
@@ -34,11 +35,13 @@ def filter_location_vehicles(vehicles, area):
 
 def save_to_db(vehicles, service_provider):
     for vehicle in vehicles:
-        db_v, created = Vehicle.objects.get_or_create(service_provider=service_provider,
-                                             vehicle_id=vehicle.vehicle_id)
+
         try:
-            VehicleLocationTrack.objects.create(vehicle=db_v, position=vehicle.location, raw_data=vehicle.raw_data,
-                                            battery_level=vehicle.battery_level, last_seen=vehicle.last_seen)
+            db_v, created = Vehicle.objects.get_or_create(service_provider=service_provider,
+                                                          vehicle_id=vehicle.vehicle_id)
+            vt = VehicleLocationTrack.objects.create(vehicle=db_v, position=vehicle.location, raw_data=vehicle.raw_data,
+                                            battery_level=vehicle.battery_level, last_seen=vehicle.last_seen,
+                                            suburb=SubUrb.objects.filter(area__contains=vehicle.location).first())
         except Exception as e:
             print(e)
 

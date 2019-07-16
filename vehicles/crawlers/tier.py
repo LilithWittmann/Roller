@@ -20,7 +20,7 @@ class TierCrawler(Crawler):
         for item in data["data"]:
             vehicle_tracks.append(VehicleTrack(vehicle_id=item["licencePlate"],
                                                provider="tier",
-                                               last_seen=dateutil_parser(item["lastStateChange"]),
+                                               last_seen=dateutil_parser(item["lastLocationUpdate"]),
                                                lat=item["lat"],
                                                lon=item["lng"],
                                                battery_level=item["batteryLevel"],

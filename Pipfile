@@ -37,6 +37,8 @@ geomet = "*"
 django-admin-json-editor = "*"
 django-leaflet = "*"
 geojson = "*"
+django-cors-headers = "*"
+overpy = "*"
 
 [requires]
 python_version = "3.7"

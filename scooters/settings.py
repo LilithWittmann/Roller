@@ -55,6 +55,9 @@ INSTALLED_APPS = [
     'serious_django_permissions',
     'serious_django_graphene',
 
+    # cors
+    'corsheaders',
+
     ## Your helpers app
     'helpers',
     'django_admin_json_editor',  # for the crawler settings
@@ -67,6 +70,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -139,6 +143,10 @@ USE_L10N = True
 USE_TZ = True
 
 
+CORS_URLS_REGEX = r'^/graphql.*$'
+CORS_ORIGIN_ALLOW_ALL = True
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
@@ -175,6 +183,10 @@ SHELL_PLUS_PRE_IMPORTS = [
 # Setting to have debug-toolbar show up on local development
 INTERNAL_IPS = ['127.0.0.1', '127.0.0.3']
 
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost',
+    'http://127.0.0.1:8080'
+)
 
 INSTALLED_CRAWLERS = {
     "circ": 'vehicles.crawlers.circ.CircCrawler',

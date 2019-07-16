@@ -3,5 +3,6 @@
 while :
 do
     pipenv run python manage.py crawl_vehicles
-    sleep 300
+    pipenv run python manage.py estimate_trips
+    sleep 150
 done

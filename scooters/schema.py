@@ -22,7 +22,7 @@ class Query(
 class Mutation(
     # TODO put mutation classes from your apps here
 
-    #vehicle_schema.Mutation,
+    vehicle_schema.Mutation,
     graphene.ObjectType
 ):
     # This class will inherit from multiple Mutations as we add apps to our project
@@ -33,5 +33,5 @@ class Mutation(
 # to the constructor call below.
 schema = graphene.Schema(
     query=Query,
-    #mutation=Mutation
+    mutation=Mutation
 )
