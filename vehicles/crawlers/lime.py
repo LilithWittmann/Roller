@@ -13,7 +13,8 @@ class LimeCrawler(Crawler):
     SERVICE_PROVIDER = "lime"
     LOCATION_BASED_CRAWLING = True
 
-    def nearby_search(self, lat: float, lon: float, radius: int = 500) -> [VehicleTrack]:
+    def nearby_search(self, lat: float, lon: float, radius: int = 500, service_area=None,
+                    service_provider=None) -> [VehicleTrack]:
 
         # i know its not exact but the best i wanted to build right now ^^
 

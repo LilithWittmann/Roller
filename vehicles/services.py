@@ -64,7 +64,7 @@ class StatisticAggregationService(Service):
     def get_latest_geojson(cls):
         geojson_list = []
 
-        color_mapping = { "voi": "#f46c62", "lime": "#24d000", "tier": "#69d2aa"}
+        color_mapping = { "voi": "#f46c62", "lime": "#24d000", "tier": "#69d2aa", "circ": "#f56600"}
 
 
         for itm in VehicleLocationTrack.objects\
@@ -93,7 +93,7 @@ class StatisticAggregationService(Service):
         service_providers = []
 
         if not queryset:
-            queryset = TripEstimation.objects.filter(updated_at__gte=datetime.now() - timedelta(hours=2))
+            queryset = TripEstimation.objects.filter(updated_at__gte=datetime.now() - timedelta(hours=12))
 
         for sp in queryset.values('vehicle__service_provider') \
                 .annotate(avg_duration=Avg('duration'),
@@ -141,7 +141,7 @@ class StatisticAggregationService(Service):
     def trip_week_stats(cls, queryset=None):
 
         if not queryset:
-            queryset = TripEstimation.objects.filter(updated_at__gte=datetime.now() - timedelta(hours=12))
+            queryset = TripEstimation.objects.filter(updated_at__gte=datetime.now() - timedelta(hours=24))
 
         week_stats = []
         for tp in queryset.values('trip_type') \

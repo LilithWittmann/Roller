@@ -58,7 +58,7 @@ class Command(BaseCommand):
                 print(crawler)
                 if not crawler.LOCATION_BASED_CRAWLING:
                     ctr = Polygon(wkt.loads(str(service_area.area).split(";")[1])).centroid
-                    vehicles = crawler.nearby_search(ctr.y, ctr.x)
+                    vehicles = crawler.nearby_search(ctr.y, ctr.x, service_provider=service, service_area=service_area)
                     f_vehicles = filter_location_vehicles(
                         vehicles, Polygon(wkt.loads(str(service_area.area).split(";")[1])))
                     save_to_db(f_vehicles, service)
@@ -91,7 +91,8 @@ class Command(BaseCommand):
                     vehicles = {}
 
                     for p in points:
-                        crwl_result = crawler.nearby_search(p.y, p.x, radius=radius)
+                        crwl_result = crawler.nearby_search(p.y, p.x, radius=radius, service_provider=service,
+                                                            service_area=service_area)
                         for v in crwl_result:
                             vehicles[v.vehicle_id] = v
                         print(len(vehicles))

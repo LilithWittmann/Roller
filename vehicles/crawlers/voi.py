@@ -12,7 +12,8 @@ class VoiCrawler(Crawler):
     SERVICE_PROVIDER = "voi"
     LOCATION_BASED_CRAWLING = False
 
-    def nearby_search(self, lat: float, lon: float, radius: int = None) -> [VehicleTrack]:
+    def nearby_search(self, lat: float, lon: float, radius: int = None, service_area=None,
+                    service_provider=None) -> [VehicleTrack]:
         request_url = f'https://api.voiapp.io/v1/vehicle/status/ready?lat={lat}&lng={lon}'
 
         result = requests.get(request_url)

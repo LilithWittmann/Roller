@@ -11,7 +11,8 @@ class TierCrawler(Crawler):
     SERVICE_PROVIDER = "tier"
     LOCATION_BASED_CRAWLING = True
 
-    def nearby_search(self, lat: float, lon: float, radius: int = 500) -> [VehicleTrack]:
+    def nearby_search(self, lat: float, lon: float, radius: int = 500, service_area=None,
+                    service_provider=None) -> [VehicleTrack]:
         request_url = f'https://platform.tier-services.io/vehicle?lat={lat}&lng={lon}&radius={radius}'
         headers = {'X-Api-Key': self.settings.get("API_KEY")}
         result = requests.get(request_url, headers=headers)

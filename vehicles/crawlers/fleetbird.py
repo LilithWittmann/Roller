@@ -15,7 +15,8 @@ class FleetbirdCrawler(Crawler):
         super().__init__(settings)
 
 
-    def nearby_search(self, lat: float, lon: float, radius: int = None) -> [VehicleTrack]:
+    def nearby_search(self, lat: float, lon: float, radius: int = None, service_area=None,
+                    service_provider=None) -> [VehicleTrack]:
         request_url = f'https://{self.settings.get("INSTANCE_NAME")}.frontend.fleetbird.eu/api/prod/v1.06/map/cars/'
 
         result = requests.get(request_url)
