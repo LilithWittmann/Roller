@@ -1,4 +1,5 @@
 import math
+import time
 
 from dateutil.parser import parse as dateutil_parser
 import json
@@ -27,7 +28,7 @@ class LimeCrawler(Crawler):
         }
 
         headers = {
-            'authorization': self.settings.get('AUTHORIZATION', None)
+                'authorization': self.settings.get('AUTHORIZATION', None)
         }
 
         params = (
@@ -44,17 +45,24 @@ class LimeCrawler(Crawler):
                                 params=params, cookies=cookies)
 
         vehicle_tracks = []
-        if not "data" in response.json():
-            return []
-        for item in response.json()["data"]["attributes"]["bikes"]:
-            vehicle_tracks.append(VehicleTrack(vehicle_id=f'{item["attributes"]["type_name"]}-{item["attributes"]["last_three"]}',
-                                               provider="lime",
-                                               last_seen=dateutil_parser(item["attributes"]["last_activity_at"]),
-                                               lat=item["attributes"]["latitude"],
-                                               lon=item["attributes"]["longitude"],
-                                               battery_level=int(item["attributes"]["meter_range"]/ (40233/ 100)),
-                                               raw_data=json.dumps(item)))
+        print(response.text)
+        try:
+            if not "data" in response.json():
+                return []
+            for item in response.json()["data"]["attributes"]["bikes"]:
+                vehicle_tracks.append(VehicleTrack(vehicle_id=f'{item["attributes"]["type_name"]}-{item["attributes"]["last_three"]}',
+                                                   provider="lime",
+                                                   last_seen=dateutil_parser(item["attributes"]["last_activity_at"]),
+                                                   lat=item["attributes"]["latitude"],
+                                                   lon=item["attributes"]["longitude"],
+                                                   battery_level=int(item["attributes"]["meter_range"]/ (40233/ 100)) \
+                                                       if "meter_range" in item["attributes"] and item["attributes"]["meter_range"] else 0,
+                                                   raw_data=json.dumps(item)))
+        except json.decoder.JSONDecodeError:
+            print("I guess we have been caught")
+            return vehicle_tracks
 
+        time.sleep(5)
 
 
         return vehicle_tracks

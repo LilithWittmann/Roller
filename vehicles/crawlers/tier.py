@@ -17,6 +17,7 @@ class TierCrawler(Crawler):
         headers = {'X-Api-Key': self.settings.get("API_KEY")}
         result = requests.get(request_url, headers=headers)
         data = result.json()
+        print(data)
         vehicle_tracks = []
         for item in data["data"]:
             vehicle_tracks.append(VehicleTrack(vehicle_id=item["licencePlate"],

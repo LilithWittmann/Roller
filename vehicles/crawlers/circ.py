@@ -14,6 +14,12 @@ class CircCrawler(Crawler):
     SERVICE_PROVIDER = "circ"
     LOCATION_BASED_CRAWLING = False
 
+    """
+    getting your tokens
+    curl -X POST  -H "Content-type: application/json" -H "Accept: application/json"  "https://node.goflash.com/verification/phone/start" -d '{ "phoneCountryCode": "+49", "phoneNumber": "12345678" }'       
+    curl -X POST  -H "Content-type: application/json" -H "Accept: application/json"  "https://node.goflash.com/signup/phone" -d '{ "phoneCountryCode": "+49", "phoneNumber": "12345678", "token": "345933" }'
+
+    """
 
     def refresh_token(self, service_provider):
 
@@ -58,8 +64,8 @@ class CircCrawler(Crawler):
 
 
         result = requests.get('https://node.goflash.com/devices', headers=headers, params=params)
-
         data = result.json()
+        print(data)
         vehicle_tracks = []
         for item in data["devices"]:
             vehicle_tracks.append(VehicleTrack(vehicle_id=item["name"],

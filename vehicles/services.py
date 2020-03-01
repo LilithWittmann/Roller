@@ -106,10 +106,10 @@ class StatisticAggregationService(Service):
                 .filter(updated_at__gte=datetime.now() - timedelta(hours=1)) \
                 .filter(vehicle__service_provider=sp_).distinct('vehicle_id').count()
             service_providers.append({"service_provider": sp_,
-                                      "average_price":float(sp["avg_price"]),
+                                      "average_price":float(sp["avg_price"]) if sp["avg_price"] else 0,
                                       "count_scooters": seen_vehicles,
                                       "count_trips": sp["count_trips"],
-                                      "average_distance": int(sp["avg_distance"]),
+                                      "average_distance": int(sp["avg_distance"]) if sp["avg_distance"] else 0,
                                       "average_duration":sp["avg_duration"].seconds//60})
 
 

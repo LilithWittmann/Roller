@@ -53,6 +53,7 @@ class Command(BaseCommand):
 
         for service_area in ServiceTrackingArea.objects.all():
             for service in service_area.service_providers.all():
+                print(service)
                 crawler_cls = import_crawler(service.crawler)
                 crawler = crawler_cls(service.settings)
                 print(crawler)

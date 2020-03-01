@@ -55,14 +55,15 @@ class Command(BaseCommand):
                             estimated_distance = int(route_estimation["paths"][0]["distance"])
                             print(estimated_distance)
 
-                            trp = TripEstimation.objects.create(vehicle=vehicle, start_point=track, end_point=last_track,
-                                                          duration=(last_track.last_seen - track.last_seen),
-                                                          price_estimation=price_estimation,
-                                                          route_estimation=GEOSGeometry(
-                                                              json.dumps(route_estimation["paths"][0]["points"]),
-                                                          ),
-                                                          route_duration_estimation=estimated_time,
-                                                          route_distance_estimation=estimated_distance)
+                            trp = TripEstimation.objects.create(vehicle=vehicle, start_point=track,
+                                                                end_point=last_track,
+                                                                duration=(last_track.last_seen - track.last_seen),
+                                                                price_estimation=price_estimation,
+                                                                route_estimation=GEOSGeometry(
+                                                                    json.dumps(route_estimation["paths"][0]["points"]),
+                                                                ),
+                                                                route_duration_estimation=estimated_time,
+                                                                route_distance_estimation=estimated_distance)
                             PublicTransportService.assign_station_to_trip_estimation(trp)
 
                 if track:
