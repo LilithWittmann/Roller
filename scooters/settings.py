@@ -197,6 +197,7 @@ INSTALLED_CRAWLERS = {
     "ufo": 'vehicles.crawlers.ufo.UfoCrawler',
     "voi": 'vehicles.crawlers.voi.VoiCrawler',
     "zero": 'vehicles.crawlers.tier.ZeroCrawler',
+    "call_a_bike": 'vehicles.crawlers.call_a_bike.CallABikeCrawler',
 }
 
 # Use the file local_settings.py to overwrite the defaults with your own

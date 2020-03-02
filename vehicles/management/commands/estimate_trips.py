@@ -36,10 +36,12 @@ class Command(BaseCommand):
                     trip_duration = int((last_track.last_seen - track.last_seen).total_seconds() / 60)
                     if not Point(track.position.x, track.position.y) \
                             .within(Point(last_track.position.x, last_track.position.y).buffer(buffer)) \
-                            and (track.battery_level - last_track.battery_level) > 2 and trip_duration < 180:
+                            and (((track.battery_level - last_track.battery_level) > 2) if track.battery_level else True)\
+                            and trip_duration < 180:
 
                         print(track.vehicle)
-                        print("battery consumtion: " + str(track.battery_level - last_track.battery_level))
+                        if track.battery_level:
+                            print("battery consumtion: " + str(track.battery_level - last_track.battery_level))
                         print("trip duration: " + str(trip_duration))
                         print(str(track.position) + " vs " + str(last_track.position))
 

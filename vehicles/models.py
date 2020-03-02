@@ -159,7 +159,7 @@ class TripEstimation(gis_models.Model):
 
     @property
     def battery_consumption(self):
-        return self.start_point.battery_level - self.end_point.battery_level
+        return (self.start_point.battery_level - self.end_point.battery_level) if self.start_point.battery_level else 0
 
     def __str__(self):
         return f'{self.vehicle} ({self.duration} minutes)'
