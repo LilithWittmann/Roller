@@ -48,6 +48,8 @@ class Pricing(models.Model):
     unlock_fee = models.DecimalField(decimal_places=3, max_digits=5)
     minute_price = models.DecimalField(decimal_places=3, max_digits=5)
 
+    free_minutes = models.DurationField(null=True, blank=True)
+
     def __str__(self):
         return f'{self.service_provider} {self.service_area}'
 
@@ -132,6 +134,11 @@ class TripEstimation(gis_models.Model):
                                            null=True, on_delete=models.SET_NULL)
     ended_at_station = models.ForeignKey(PublicTransportStation, related_name="ended_trips",
                                            null=True, on_delete=models.SET_NULL)
+    route_timing = JSONField(
+        verbose_name='route timing',
+        null=True,
+        blank=True
+    )
     duration = models.DurationField()
     trip_type = models.CharField(choices=TripTypes.choices, max_length=100, default=TripTypes.UNCLASSIFIED)
     updated_at = models.DateTimeField(null=True, auto_now_add=True)

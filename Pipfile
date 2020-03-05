@@ -39,6 +39,8 @@ django-leaflet = "*"
 geojson = "*"
 django-cors-headers = "*"
 overpy = "*"
+django-language-field = "*"
+django-language-fields = "*"
 
 [requires]
 python_version = "3.7"

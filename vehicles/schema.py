@@ -20,7 +20,8 @@ from serious_django_graphene import get_user_from_info, \
 from serious_django_services import NotPassed
 
 from vehicles.models import Vehicle, ServiceProvider, VehicleLocationTrack
-from vehicles.services import StatisticAggregationService, TripType, DayTimeFrame, TimeFrame, DataExplorationService
+from vehicles.services import StatisticAggregationService, TripType, DayTimeFrame, TimeFrame, DataExplorationService, \
+    TripVisualizationService
 
 
 class VehicleLocationTrackType(DjangoObjectType):
@@ -78,6 +79,14 @@ class TripsWeekAggregation(graphene.ObjectType):
     hour = graphene.Int()
     weekday = graphene.Int()
 
+class TripsVisualizationLocationTime(graphene.ObjectType):
+    l = graphene.List(graphene.Float)
+    t = graphene.Float()
+
+class TripsVisualization(graphene.ObjectType):
+    color = graphene.String()
+    path = graphene.List(TripsVisualizationLocationTime)
+
 
 
 ## Queries
@@ -92,7 +101,7 @@ class Query(graphene.ObjectType):
     day_stats = graphene.List(DayStatsType)
     suburb_stats = graphene.List(SuburbStats)
     trip_types = graphene.List(TripTypeAggregation)
-
+    trips_visualization = graphene.List(TripsVisualization)
     def resolve_all_vehicles(self, info, **kwargs):
         return Vehicle.objects.all()
 
@@ -111,6 +120,9 @@ class Query(graphene.ObjectType):
 
     def resolve_trip_types(self, info, **kwargs):
         return StatisticAggregationService.get_trip_type_stats()
+
+    def resolve_trips_visualization(self, info, **kwargs):
+        return TripVisualizationService.get_trips()
 
 from six import with_metaclass
 

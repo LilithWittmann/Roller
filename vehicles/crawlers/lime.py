@@ -42,10 +42,9 @@ class LimeCrawler(Crawler):
         )
 
         response = requests.get('https://web-production.lime.bike/api/rider/v1/views/map', headers=headers,
-                                params=params, cookies=cookies)
+                                params=params, cookies=cookies, timeout=5)
 
         vehicle_tracks = []
-        print(response.text)
         try:
             if not "data" in response.json():
                 return []

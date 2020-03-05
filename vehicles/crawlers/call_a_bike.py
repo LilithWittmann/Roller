@@ -35,10 +35,10 @@ class CallABikeCrawler(Crawler):
             ('expand', 'rentalobject,area'),
         )
 
-        result = requests.get('https://api.deutschebahn.com/flinkster-api-ng/v1/bookingproposals', headers=headers, params=params)
+        result = requests.get('https://api.deutschebahn.com/flinkster-api-ng/v1/bookingproposals',
+                              headers=headers, params=params, timeout=5)
         data = result.json()
         vehicle_tracks = []
-        print(result)
         for item in data["items"]:
             vehicle_tracks.append(VehicleTrack(vehicle_id=item["rentalObject"]["attributes"]["licenseplate"],
                                                provider=self.SERVICE_PROVIDER,

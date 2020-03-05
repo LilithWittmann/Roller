@@ -68,7 +68,7 @@ class Command(BaseCommand):
                     print(shp)
                     top_left_x = shp.bounds[0]
                     top_left_y = shp.bounds[1]
-                    radius = 1100
+                    radius = 1400
 
                     buffer = (radius / 40000000. * 360. / math.cos(top_left_y / 360. * math.pi))
 

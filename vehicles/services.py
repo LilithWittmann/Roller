@@ -27,7 +27,14 @@ class PriceEstimationService(Service):
         except Pricing.DoesNotExist:
             return None
 
-        return pricing.unlock_fee + int((end.last_seen - start.last_seen).total_seconds()/60) * pricing.minute_price
+        duration = end.last_seen - start.last_seen
+        if pricing.free_minutes:
+            duration = duration - pricing.free_minutes
+
+        if duration < timedelta(minutes=0):
+            return pricing.unlock_fee
+        else:
+            return pricing.unlock_fee + int(duration.total_seconds()/60) * pricing.minute_price
 
 
 class RouteEstimationService(Service):
@@ -49,7 +56,7 @@ class RouteEstimationService(Service):
             "locale": "de",
             "details": "time",
             "points_encoded": False,
-            "instructions": False
+            "instructions": True
         }
         response = requests.get("https://graphhopper.com/api/1/route", params=routing_request)
         print(response.json())
@@ -64,7 +71,7 @@ class StatisticAggregationService(Service):
     def get_latest_geojson(cls):
         geojson_list = []
 
-        color_mapping = { "voi": "#f46c62", "lime": "#24d000", "tier": "#69d2aa", "circ": "#f56600"}
+        color_mapping = { "voi": "#f46c62", "lime": "#24d000", "tier": "#69d2aa", "circ": "#f56600", "call_a_bike": "#ff0000"}
 
 
         for itm in VehicleLocationTrack.objects\
@@ -239,6 +246,34 @@ class PublicTransportService(Service):
         else:
             trip_estimation.ended_at_station = None
             trip_estimation.save()
+
+
+
+
+class TripVisualizationService(Service):
+    service_exceptions = ()
+
+    TRIPS_FROM_HOURS = 4
+    SECONDS_PER_HOUR = 12
+
+    @classmethod
+    def get_trips(cls):
+        now_time = datetime.now()
+        timespan_seconds = timedelta(hours=cls.TRIPS_FROM_HOURS).seconds
+        animation_length = cls.TRIPS_FROM_HOURS * cls.SECONDS_PER_HOUR
+        zero_timestamp = now_time - timedelta(hours=cls.TRIPS_FROM_HOURS+1)
+        routes = []
+        for trip in TripEstimation.objects.filter(end_point__updated_at__gte=zero_timestamp,
+                                                  end_point__updated_at__lte=now_time - timedelta(hours=1)):
+            start_time = (trip.end_point.updated_at.replace(tzinfo=None) - zero_timestamp - trip.duration).seconds
+            route = []
+            if trip.route_timing:
+                for item in trip.route_timing:
+                    route.append({"l": item[0], "t": item[1] + start_time * 1000 / timespan_seconds * animation_length})
+                routes.append({"path": route, "color": trip.vehicle.service_provider.primary_color})
+        return routes
+
+
 
 
 

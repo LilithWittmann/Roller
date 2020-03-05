@@ -57,6 +57,17 @@ class Command(BaseCommand):
                             estimated_distance = int(route_estimation["paths"][0]["distance"])
                             print(estimated_distance)
 
+                            # generate timed route for routing visualization, …
+                            route_timing = []
+                            current_timestamp = 0
+                            trip_duration_seconds = (last_track.last_seen - track.last_seen)
+                            # calculate actual legtime
+                            for item in route_estimation["paths"][0]["details"]["time"]:
+                                current_timestamp = ((timedelta(seconds=item[2] / 1000)/ estimated_time[0]
+                                                      * trip_duration_seconds) + timedelta(seconds=current_timestamp)).seconds
+                                route_timing.append([route_estimation["paths"][0]["points"]["coordinates"][item[1]], current_timestamp])
+                            print(route_timing)
+
                             trp = TripEstimation.objects.create(vehicle=vehicle, start_point=track,
                                                                 end_point=last_track,
                                                                 duration=(last_track.last_seen - track.last_seen),
@@ -64,6 +75,7 @@ class Command(BaseCommand):
                                                                 route_estimation=GEOSGeometry(
                                                                     json.dumps(route_estimation["paths"][0]["points"]),
                                                                 ),
+                                                                route_timing=route_timing,
                                                                 route_duration_estimation=estimated_time,
                                                                 route_distance_estimation=estimated_distance)
                             PublicTransportService.assign_station_to_trip_estimation(trp)
