@@ -210,5 +210,5 @@ except ImportError:
 # If (and only if) we're using docker (implied by the IS_DOCKER env variable),
 # import the relevant settings
 from os import environ
-if environ.get('IS_DOCKER') is not None:
-    from .docker_settings import *
+#if environ.get('IS_DOCKER') is not None:
+#    from .docker_settings import *
