@@ -4,7 +4,6 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-django-debug-toolbar = "~=1.9.1"
 ipython = "~=6.5.0"
 
 [packages]
@@ -41,6 +40,8 @@ django-cors-headers = "*"
 overpy = "*"
 django-language-field = "*"
 django-language-fields = "*"
+django-debug-toolbar = "~=1.9.1"
+
 
 [requires]
 python_version = "3.7"
