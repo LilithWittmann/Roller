@@ -28,6 +28,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+if os.environ.get('GDAL_LIBRARY_PATH', None):
+    GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
+if os.environ.get('GEOS_LIBRARY_PATH', None):
+    GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
+
+
 
 # Application definition
 
