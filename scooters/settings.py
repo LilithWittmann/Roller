@@ -213,8 +213,7 @@ try:
 except ImportError:
     pass
 
-# If (and only if) we're using docker (implied by the IS_DOCKER env variable),
-# import the relevant settings
 from os import environ
-#if environ.get('IS_DOCKER') is not None:
-#    from .docker_settings import *
+print(environ.get('ENVIRONMENT_TYPE') )
+if environ.get('ENVIRONMENT_TYPE') is not None:
+    from .production.prod_settings import *

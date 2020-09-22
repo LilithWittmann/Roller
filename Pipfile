@@ -41,7 +41,7 @@ overpy = "*"
 django-language-field = "*"
 django-language-fields = "*"
 django-debug-toolbar = "~=1.9.1"
-
+boto3 = "*"
 
 [requires]
 python_version = "3.7"
