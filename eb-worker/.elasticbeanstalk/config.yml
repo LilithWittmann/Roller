@@ -19,4 +19,4 @@ global:
   profile: eb-cli
   repository: null
   sc: git
-  workspace_type: Application
+  workspace_type: Worker
