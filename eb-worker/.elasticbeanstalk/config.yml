@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: worker-dev
+    environment: roller-worker
     group_suffix: dev
 environment-defaults:
   Roller-worker:

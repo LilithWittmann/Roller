@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: server-dev
+    environment: roller-server
     group_suffix: dev
 environment-defaults:
   Roller-server:
