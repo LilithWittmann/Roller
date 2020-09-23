@@ -22,6 +22,13 @@ DATABASES = {
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+AWS_EB_DEFAULT_REGION = "eu-central-1"
+# your aws access key id
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+# your aws access key
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+# queue name to use - queues that don't exist will be created automatically
+AWS_EB_DEFAULT_QUEUE_NAME = "roller_queue"
 
 STATIC_ROOT = "/static/"
 ALLOWED_HOSTS = ['*']

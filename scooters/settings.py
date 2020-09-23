@@ -56,6 +56,9 @@ INSTALLED_APPS = [
     'graphene_django',
     'graphene_gis_extension', # this is our own extension
 
+    ## async tasks in django
+    'django-eb-sqs-worker',
+
     ## Serious Django
     'serious_django_services',
     'serious_django_permissions',
@@ -71,6 +74,7 @@ INSTALLED_APPS = [
 
     ## Your own apps
     'vehicles',
+
 ]
 
 MIDDLEWARE = [
