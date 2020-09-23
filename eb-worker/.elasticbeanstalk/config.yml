@@ -3,7 +3,7 @@ branch-defaults:
     environment: worker-dev
     group_suffix: dev
 environment-defaults:
-  Roller-dev2:
+  Roller-worker:
     branch: null
     repository: null
 global:

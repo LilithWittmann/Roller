@@ -3,7 +3,7 @@ branch-defaults:
     environment: server-dev
     group_suffix: dev
 environment-defaults:
-  Roller-dev2:
+  Roller-server:
     branch: null
     repository: null
 global:
