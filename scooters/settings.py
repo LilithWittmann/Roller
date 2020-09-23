@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'graphene_gis_extension', # this is our own extension
 
     ## async tasks in django
-    'django-eb-sqs-worker',
+    'eb_sqs_worker',
 
     ## Serious Django
     'serious_django_services',
