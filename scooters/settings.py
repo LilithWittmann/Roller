@@ -160,7 +160,7 @@ STATIC_URL = '/static/'
 
 
 # Session management via cache (=> via Redis)
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_CACHE_ALIAS = "default"
 
 
