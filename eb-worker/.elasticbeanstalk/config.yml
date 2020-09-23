@@ -3,7 +3,13 @@ branch-defaults:
     environment: roller-worker
     group_suffix: dev
 environment-defaults:
+  Roller-dev2:
+    branch: null
+    repository: null
   Roller-worker:
+    branch: null
+    repository: null
+  Scooters-env:
     branch: null
     repository: null
 global:
@@ -19,4 +25,4 @@ global:
   profile: eb-cli
   repository: null
   sc: git
-  workspace_type: Worker
+  workspace_type: Application

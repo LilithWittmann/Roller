@@ -6,10 +6,16 @@ environment-defaults:
   Roller-server:
     branch: null
     repository: null
+  Scooters-env:
+    branch: null
+    repository: null
+  roller-worker:
+    branch: null
+    repository: null
 global:
   application_name: Roller
   branch: null
-  default_ec2_keyname: aws-eb
+  default_ec2_keyname: null
   default_platform: Python 3.7
   default_region: eu-central-1
   include_git_submodules: true
