@@ -28,8 +28,14 @@ urlpatterns = [
     path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
 ]
 
+
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
         re_path(r'^__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
+
+
+
+from eb_sqs_worker.urls import urlpatterns as eb_sqs_urlpatterns
+urlpatterns += eb_sqs_urlpatterns
