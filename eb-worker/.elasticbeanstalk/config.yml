@@ -1,13 +1,13 @@
 branch-defaults:
   master:
-    environment: worker-roller
-    group_suffix: roller
+    environment: worker-scooters
+    group_suffix: scooters
 environment-defaults:
   Roller-dev2:
     branch: null
     repository: null
 global:
-  application_name: Roller
+  application_name: scooters
   branch: null
   default_ec2_keyname: aws-eb
   default_platform: Python 3.7
