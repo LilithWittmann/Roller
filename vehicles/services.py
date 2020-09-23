@@ -15,6 +15,8 @@ from vehicles.models import ServiceTrackingArea, Pricing, VehicleLocationTrack, 
     ServiceProvider, SubUrb, PublicTransportStation
 
 
+TEMP_TIME = datetime(2020, 2, 3, 10, 0, 11, 703055)
+
 class PriceEstimationService(Service):
 
     service_exceptions = ()
@@ -72,10 +74,13 @@ class StatisticAggregationService(Service):
         geojson_list = []
 
         color_mapping = { "voi": "#f46c62", "lime": "#24d000", "tier": "#69d2aa", "circ": "#f56600", "call_a_bike": "#ff0000"}
-
+        if not TEMP_TIME:
+            t_used = datetime.now()
+        else:
+            t_used = TEMP_TIME
 
         for itm in VehicleLocationTrack.objects\
-                .filter(updated_at__gte=datetime.now()-timedelta(hours=2)).distinct('vehicle'):
+                .filter(updated_at__gte=t_used-timedelta(hours=2)).distinct('vehicle'):
 
                 geojson_list.append({
                     "type": "Feature",
@@ -98,9 +103,12 @@ class StatisticAggregationService(Service):
     def calculate_avg_trips(cls, queryset=None):
 
         service_providers = []
-
+        if not TEMP_TIME:
+            t_used = datetime.now()
+        else:
+            t_used = TEMP_TIME
         if not queryset:
-            queryset = TripEstimation.objects.filter(updated_at__gte=datetime.now() - timedelta(hours=12))
+            queryset = TripEstimation.objects.filter(updated_at__gte=t_used - timedelta(hours=12))
 
         for sp in queryset.values('vehicle__service_provider') \
                 .annotate(avg_duration=Avg('duration'),
@@ -110,7 +118,7 @@ class StatisticAggregationService(Service):
                           ):
             sp_ = ServiceProvider.objects.get(id=sp["vehicle__service_provider"])
             seen_vehicles = VehicleLocationTrack.objects \
-                .filter(updated_at__gte=datetime.now() - timedelta(hours=1)) \
+                .filter(updated_at__gte=t_used - timedelta(hours=1)) \
                 .filter(vehicle__service_provider=sp_).distinct('vehicle_id').count()
             service_providers.append({"service_provider": sp_,
                                       "average_price":float(sp["avg_price"]) if sp["avg_price"] else 0,
@@ -124,9 +132,13 @@ class StatisticAggregationService(Service):
 
     @classmethod
     def get_trip_type_stats(cls, queryset=None):
+        if not TEMP_TIME:
+            t_used = datetime.now()
+        else:
+            t_used = TEMP_TIME
 
         if not queryset:
-            queryset = TripEstimation.objects.filter(updated_at__gte=datetime.now() - timedelta(hours=12))
+            queryset = TripEstimation.objects.filter(updated_at__gte=t_used - timedelta(hours=12))
 
         trip_types = []
         for tp in queryset.values('trip_type') \
@@ -146,9 +158,12 @@ class StatisticAggregationService(Service):
 
     @classmethod
     def trip_week_stats(cls, queryset=None):
-
+        if not TEMP_TIME:
+            t_used = datetime.now()
+        else:
+            t_used = TEMP_TIME
         if not queryset:
-            queryset = TripEstimation.objects.filter(updated_at__gte=datetime.now() - timedelta(hours=24))
+            queryset = TripEstimation.objects.filter(updated_at__gte=t_used - timedelta(hours=24))
 
         week_stats = []
         for tp in queryset.values('trip_type') \
@@ -170,10 +185,14 @@ class StatisticAggregationService(Service):
     def get_suburb_stats(cls):
 
         scooter_suburbs = []
+        if not TEMP_TIME:
+            t_used = datetime.now()
+        else:
+            t_used = TEMP_TIME
 
         for t in VehicleLocationTrack.objects.values('suburb__id', 'suburb__name') \
                 .filter(id__in=VehicleLocationTrack.objects.values('id')
-                .filter(updated_at__gte=datetime.now() - timedelta(hours=12)).distinct('vehicle')) \
+                .filter(updated_at__gte=t_used - timedelta(hours=12)).distinct('vehicle')) \
                 .annotate(scooter_count=Count('suburb__id')):
             scooter_suburbs.append(t)
 
@@ -258,7 +277,12 @@ class TripVisualizationService(Service):
 
     @classmethod
     def get_trips(cls):
-        now_time = datetime.now()
+        if not TEMP_TIME:
+            t_used = datetime.now()
+        else:
+            t_used = TEMP_TIME
+
+        now_time = t_used
         timespan_seconds = timedelta(hours=cls.TRIPS_FROM_HOURS).seconds
         animation_length = cls.TRIPS_FROM_HOURS * cls.SECONDS_PER_HOUR
         zero_timestamp = now_time - timedelta(hours=cls.TRIPS_FROM_HOURS+1)
@@ -307,6 +331,10 @@ class DataExplorationService(Service):
     def query_filter(cls, trip_type=TripType.ALL, started_at_station=None, ended_at_station=None,
                      group_rides=None, day_time_frame=DayTimeFrame.ALL_DAY, time_frame=TimeFrame.TODAY):
 
+        if not TEMP_TIME:
+            t_used = datetime.now()
+        else:
+            t_used = TEMP_TIME
 
         qs = TripEstimation.objects
 
@@ -334,11 +362,11 @@ class DataExplorationService(Service):
                              start_point__last_seen__time__lte=time(23, 30)))
 
         if time_frame == TimeFrame.TODAY.name:
-            filters.append(Q(updated_at__gte=datetime.now()-timedelta(hours=24)))
+            filters.append(Q(updated_at__gte=t_used-timedelta(hours=24)))
         elif time_frame == TimeFrame.THIS_WEEK.name:
-            filters.append(Q(updated_at__gte=datetime.now() - timedelta(days=7)))
+            filters.append(Q(updated_at__gte=t_used - timedelta(days=7)))
         elif time_frame == TimeFrame.THIS_MONTH.name:
-            filters.append(Q(updated_at__gte=datetime.now() - timedelta(days=30)))
+            filters.append(Q(updated_at__gte=t_used - timedelta(days=30)))
 
 
         if started_at_station == True:
