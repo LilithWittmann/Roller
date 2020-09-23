@@ -42,6 +42,7 @@ django-language-field = "*"
 django-language-fields = "*"
 django-debug-toolbar = "~=1.9.1"
 boto3 = "*"
+django-storages="*"
 
 [requires]
 python_version = "3.7"
