@@ -6,7 +6,7 @@ from django_admin_json_editor import JSONEditorWidget
 from leaflet.admin import LeafletGeoAdmin
 
 from vehicles.models import ServiceTrackingArea, ServiceProvider, Vehicle, VehicleLocationTrack, TripEstimation, \
-    Pricing, SubUrb
+    Pricing, SubUrb, PingModel
 
 
 class ServiceTrackingAreaAdmin(LeafletGeoAdmin):
@@ -57,3 +57,4 @@ class ServiceProviderAdmin(admin.ModelAdmin):
 admin.site.register(ServiceProvider, ServiceProviderAdmin)
 admin.site.register(Vehicle)
 admin.site.register(Pricing)
+admin.site.register(PingModel)
