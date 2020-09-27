@@ -3,3 +3,6 @@ cron:
  - name: "crawl_vehicles_crontask"
    url: "/sqs/"
    schedule: "5 * * * *"
+ - name: "ping_test"
+   url: "/sqs/"
+   schedule: "1 * * * *"
