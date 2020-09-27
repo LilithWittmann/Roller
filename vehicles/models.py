@@ -170,7 +170,3 @@ class TripEstimation(gis_models.Model):
 
     def __str__(self):
         return f'{self.vehicle} ({self.duration} minutes)'
-
-
-class PingModel(models.Model):
-    date_time = models.DateTimeField(auto_now_add=True)
