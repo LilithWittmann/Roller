@@ -30,6 +30,9 @@ AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 # queue name to use - queues that don't exist will be created automatically
 AWS_EB_DEFAULT_QUEUE_NAME = "roller_queue"
 
+if os.environ.get('AWS_ENV_TYPE', 'WEB') == "WORKER":
+    AWS_EB_HANDLE_SQS_TASKS = True
+
 STATIC_ROOT = "/static/"
 ALLOWED_HOSTS = ['*']
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
