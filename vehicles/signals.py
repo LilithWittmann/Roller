@@ -10,10 +10,15 @@ from django.db.models.signals import post_save
 from eb_sqs_worker.decorators import task
 from django.core import management
 
+from vehicles.models import PingModel
+
+
 @task(task_name="crawl_vehicles_crontask")
-def crawl_vehicles_crontask(**kwargs):
+def crawl_vehicles_task(**kwargs):
     management.call_command('crawl_vehicles')
+    return True
 
 @task(task_name="ping_test")
 def ping_pong(**kwargs):
-    print("pong")
+    PingModel.objects.create()
+    return True
