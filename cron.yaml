@@ -2,4 +2,4 @@ version: 1
 cron:
  - name: "crawl_vehicles_crontask"
    url: "/sqs/"
-   schedule: "5 * * * *"
+   schedule: "*/5 * * * *"
