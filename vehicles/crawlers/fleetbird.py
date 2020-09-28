@@ -11,13 +11,15 @@ class FleetbirdCrawler(Crawler):
 
     LOCATION_BASED_CRAWLING = False
 
+    VEHICLE_TYPE="escooter"
+
     def __init__(self, settings):
         super().__init__(settings)
 
 
     def nearby_search(self, lat: float, lon: float, radius: int = None, service_area=None,
                     service_provider=None) -> [VehicleTrack]:
-        request_url = f'https://{self.settings.get("INSTANCE_NAME")}.frontend.fleetbird.eu/api/prod/v1.06/map/cars/'
+        request_url = f'https://{self.settings.get("INSTANCE_NAME")}.frontend.fleetbird.eu/api/prod/v1.09/map/cars/'
 
         result = requests.get(request_url)
         data = result.json()
@@ -28,5 +30,7 @@ class FleetbirdCrawler(Crawler):
                                                last_seen=datetime.now(),
                                                lat=item["lat"],
                                                lon=item["lon"],
+                                               battery_level=item["fuelLevel"],
+                                               vehicle_type=self.VEHICLE_TYPE,
                                                raw_data=json.dumps(item)))
         return vehicle_tracks
