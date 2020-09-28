@@ -28,9 +28,12 @@ class Command(BaseCommand):
             print(service_area)
 
             for feat in data["features"]:
-                print(feat["properties"]["stadtteil"])
+                print(feat["properties"]["OTEIL"])
                 try:
-                    SubUrb.objects.create(area=GEOSGeometry(json.dumps(feat["geometry"])),
-                                          service_area=service_area, name=feat["properties"]["stadtteil"])
+                    geom = GEOSGeometry(json.dumps(feat["geometry"]))
+                    if type(geom) != MultiPolygon:
+                        geom = MultiPolygon(geom)
+                    SubUrb.objects.create(area=geom,
+                                          service_area=service_area, name=feat["properties"]["OTEIL"])
                 except Exception as e:
                     print(e)

@@ -49,7 +49,7 @@ class SubUrb(gis_models.Model):
     name = models.CharField(max_length=100)
     population = models.BigIntegerField(null=True)
     avg_income = models.BigIntegerField(null=True)
-    area = gis_models.PolygonField()
+    area = gis_models.MultiPolygonField()
     service_area = models.ForeignKey(ServiceTrackingArea, on_delete=models.CASCADE)
 
     def __str__(self):
