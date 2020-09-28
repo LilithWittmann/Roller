@@ -21,6 +21,6 @@ def receive_sms(request):
         crawler_cls = import_crawler(service.crawler)
         crawler = crawler_cls(service.settings)
         if "sms_hook" in dir(crawler):
-            crawler.sms_hook(service.settings, json.loads(data.content)["Body"])
+            crawler.sms_hook(service, json.loads(data.content)["Body"])
     return Response(status=status.HTTP_201_CREATED)
 

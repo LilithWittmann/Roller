@@ -56,7 +56,7 @@ def authorize_service_provider(modeladmin, request, queryset):
         crawler_cls = import_crawler(service.crawler)
         crawler = crawler_cls(service.settings)
         if "authorize" in dir(crawler):
-            crawler.authorize(service.settings)
+            crawler.authorize(service)
 authorize_service_provider.short_description = "Start authorization fot selected service providers"
 
 

@@ -1,3 +1,4 @@
+from datetime import datetime
 
 from dateutil.parser import parse as dateutil_parser
 import json
@@ -15,12 +16,12 @@ class VoiCrawler(Crawler):
 
 
     def authorize(self, service_provider):
-        response = request.post("https://api.voiapp.io/v1/auth/verify/phone", data=json.dumps({
+        print(service_provider.settings["PHONE_NUMBER"])
+        response = requests.post("https://api.voiapp.io/v1/auth/verify/phone", data=json.dumps(
             {
                 "country_code": service_provider.settings["COUNTRY_CODE"],
                 "phone_number": service_provider.settings["PHONE_NUMBER"]
-            }
-        }))
+            }))
         token = response.json()["token"]
 
         service_provider.settings["loginToken"] = token
@@ -36,32 +37,38 @@ class VoiCrawler(Crawler):
             return False
 
         m = re.search(r'[0-9]{6}', sms)
+        print(m.group(0))
 
-        response = request.post("https://api.voiapp.io/v1/auth/verify/phone", data=json.dumps({
+        print(json.dumps(
+            {
+                "code": int(m.group(0)),
+                "token": service_provider.settings["loginToken"]
+            }
+        ))
+
+        response = requests.post("https://api.voiapp.io/v1/auth/verify/code", data=json.dumps(
             {
                 "code": m.group(0),
                 "token": service_provider.settings["loginToken"]
             }
-        }))
+        ))
 
-
-        response = request.post("https://api.voiapp.io/v1/auth/verify/presence", data=json.dumps({
+        response = requests.post("https://api.voiapp.io/v1/auth/verify/presence", data=json.dumps(
             {
                 "email": service_provider.settings["EMAIL"],
                 "token": service_provider.settings["loginToken"]
-            }
-        }))
-        service_provider.settings["authenticationToken"] = response.json()["authenticationToken"]
+            }))
+        print(response.json())
+        service_provider.settings["authToken"] = response.json()["authToken"]
         service_provider.save()
 
 
     def refresh_token(self, service_provider):
 
-        response = request.post("https://api.voiapp.io/v1/auth/session", data=json.dumps({
+        response = requests.post("https://api.voiapp.io/v1/auth/session", data=json.dumps(
             {
-                "authenticationToken": service_provider.settings["authenticationToken"]
-            }
-        }))
+                "authenticationToken": service_provider.settings["authToken"]
+            }))
 
         tokens = response.json()
 
@@ -86,12 +93,12 @@ class VoiCrawler(Crawler):
         result = requests.get(request_url,headers=headers)
         data = result.json()
         vehicle_tracks = []
-        for item in data:
+        for item in data["data"]["vehicle_groups"][0]["vehicles"]:
             vehicle_tracks.append(VehicleTrack(vehicle_id=item["short"],
                                                provider="voi",
-                                               last_seen=dateutil_parser(item["updated"]),
-                                               lat=item["location"][0],
-                                               lon=item["location"][1],
+                                               last_seen=datetime.now(),
+                                               lat=item["location"]["lat"],
+                                               lon=item["location"]["lng"],
                                                battery_level=item["battery"],
                                                raw_data=json.dumps(item)))
 
