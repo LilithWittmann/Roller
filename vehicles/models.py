@@ -8,6 +8,21 @@ from serious_django_enums import AutoEnum
 
 CRAWLER_CHOICES = ((cls,name) for name, cls in settings.INSTALLED_CRAWLERS.items())
 
+VEHICLE_CHOICES = (
+    (
+        'scooter',
+        'Scooter'
+    ),
+    (
+        'emoped',
+        'E-Moped'
+    ),
+    (
+        'bicycle',
+        'Bicycle'
+    ),
+
+)
 
 class ServiceProvider(models.Model):
     name = models.CharField(max_length=30)
@@ -57,7 +72,7 @@ class Pricing(models.Model):
 class Vehicle(models.Model):
     service_provider = models.ForeignKey(ServiceProvider, related_name="vehicles", on_delete=models.CASCADE)
     vehicle_id = models.CharField(max_length=200, primary_key=True, editable=False)
-
+    vehicle_type = models.CharField(max_length=30, choices=VEHICLE_CHOICES, default='scooter')
     @property
     def last_track(self):
         return self.location_track.order_by('-updated_at').first()

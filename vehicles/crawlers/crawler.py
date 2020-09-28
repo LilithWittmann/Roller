@@ -11,7 +11,7 @@ class VehicleTrack(object):
     LOCATION_BASED_CRAWLING = True
 
     def __init__(self, vehicle_id: str, lat: int, lon: int, raw_data: str, provider: str, last_seen: datetime = None,
-                 battery_level: int = None):
+                 battery_level: int = None, vehicle_type = "escooter"):
         self.id = vehicle_id
         self.lat = lat
         self.lon = lon
@@ -19,6 +19,7 @@ class VehicleTrack(object):
         self.raw_data = raw_data
         self.last_seen = last_seen
         self.battery_level = battery_level
+        self.vehicle_type = vehicle_type
 
     @property
     def location(self):

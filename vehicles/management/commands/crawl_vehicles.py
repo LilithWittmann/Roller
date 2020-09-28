@@ -38,7 +38,8 @@ def save_to_db(vehicles, service_provider):
 
         try:
             db_v, created = Vehicle.objects.get_or_create(service_provider=service_provider,
-                                                          vehicle_id=vehicle.vehicle_id)
+                                                          vehicle_id=vehicle.vehicle_id,
+                                                          vehicle_type=vehicle.vehicle_type)
             vt = VehicleLocationTrack.objects.create(vehicle=db_v, position=vehicle.location, raw_data=vehicle.raw_data,
                                             battery_level=vehicle.battery_level, last_seen=vehicle.last_seen,
                                             suburb=SubUrb.objects.filter(area__contains=vehicle.location).first())

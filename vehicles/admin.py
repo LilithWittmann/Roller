@@ -65,8 +65,13 @@ class ServiceProviderAdmin(admin.ModelAdmin):
     fields = ('name', 'crawler', 'settings', 'primary_color', 'text_color')
     actions = [authorize_service_provider]
 
+
+class VehicleAdmin(LeafletGeoAdmin):
+    list_filter = ('vehicle_type',)
+
+
 admin.site.register(ServiceProvider, ServiceProviderAdmin)
-admin.site.register(Vehicle)
+admin.site.register(Vehicle, VehicleAdmin)
 admin.site.register(Pricing)
 
 admin.site.register(ReceivedSMS)
