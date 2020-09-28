@@ -47,5 +47,5 @@ class Crawler(ABC):
     def nearby_search(self, lat: float, lon: float, radius: int = 500) -> [VehicleTrack]:
         pass
 
-    def authorize(self):
+    def authorize(self, service_provider):
         pass

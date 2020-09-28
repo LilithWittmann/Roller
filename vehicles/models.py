@@ -170,3 +170,8 @@ class TripEstimation(gis_models.Model):
 
     def __str__(self):
         return f'{self.vehicle} ({self.duration} minutes)'
+
+
+class ReceivedSMS(models.Model):
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)

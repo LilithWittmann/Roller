@@ -44,6 +44,7 @@ django-debug-toolbar = "~=1.9.1"
 boto3 = "*"
 django-storages="*"
 django-eb-sqs-worker="*"
+djangorestframework = "*"
 
 [requires]
 python_version = "3.7"

@@ -5,8 +5,9 @@ from django.forms import ModelForm
 from django_admin_json_editor import JSONEditorWidget
 from leaflet.admin import LeafletGeoAdmin
 
+from vehicles.management.commands.crawl_vehicles import import_crawler
 from vehicles.models import ServiceTrackingArea, ServiceProvider, Vehicle, VehicleLocationTrack, TripEstimation, \
-    Pricing, SubUrb
+    Pricing, SubUrb, ReceivedSMS
 
 
 class ServiceTrackingAreaAdmin(LeafletGeoAdmin):
@@ -49,6 +50,16 @@ class ServiceProviderAdminForm(ModelForm):
         }
 
 
+
+def authorize_service_provider(modeladmin, request, queryset):
+    for service in queryset:
+        crawler_cls = import_crawler(service.crawler)
+        crawler = crawler_cls(service.settings)
+        if "authorize" in dir(crawler):
+            crawler.authorize(service.settings)
+authorize_service_provider.short_description = "Start authorization fot selected service providers"
+
+
 class ServiceProviderAdmin(admin.ModelAdmin):
     form = ServiceProviderAdminForm
     fields = ('name', 'crawler', 'settings', 'primary_color', 'text_color')
@@ -57,3 +68,5 @@ class ServiceProviderAdmin(admin.ModelAdmin):
 admin.site.register(ServiceProvider, ServiceProviderAdmin)
 admin.site.register(Vehicle)
 admin.site.register(Pricing)
+
+admin.site.register(ReceivedSMS)
