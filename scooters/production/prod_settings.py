@@ -20,7 +20,7 @@ DATABASES = {
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 AWS_EB_DEFAULT_REGION = "eu-central-1"
 # your aws access key id

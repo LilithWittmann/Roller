@@ -63,7 +63,7 @@ authorize_service_provider.short_description = "Start authorization fot selected
 class ServiceProviderAdmin(admin.ModelAdmin):
     form = ServiceProviderAdminForm
     fields = ('name', 'crawler', 'settings', 'primary_color', 'text_color')
-
+    actions = [authorize_service_provider]
 
 admin.site.register(ServiceProvider, ServiceProviderAdmin)
 admin.site.register(Vehicle)
