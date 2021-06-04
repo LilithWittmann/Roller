@@ -7,7 +7,7 @@ verify_ssl = true
 ipython = "~=6.5.0"
 
 [packages]
-Django = "~=2.2.3"
+Django = "~=2.2.21"
 Sphinx = "~=1.7.9"
 psycopg2 = "~=2.7.5"
 coverage = "~=4.5.1"
